@@ -1,5 +1,6 @@
 import Web3 from 'web3'
 import { sleep } from './utils'
+import '@metamask/legacy-web3'
 
 const Network = {
   async web3() {
@@ -24,10 +25,8 @@ const Network = {
     return web3.currentProvider
   },
 
-  getAccounts() {
-    return new Promise((resolve, reject) => {
-      Network.eth().then(eth => eth.getAccounts(Network._web3Callback(resolve, reject)))
-    })
+  async getAccounts() {
+    return window.ethereum.request({ method: 'eth_accounts' });
   },
 
   _web3Callback(resolve, reject) {

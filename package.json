@@ -4,6 +4,7 @@
   "private": true,
   "author": "Martín Triay <martriay@gmail.com>",
   "dependencies": {
+    "@metamask/legacy-web3": "^2.0.0",
     "bootstrap": "^3.3.7",
     "chart.js": "^2.7.0",
     "ethereumjs-testrpc": "^6.0.3",
@@ -21,7 +22,7 @@
     "zeppelin-solidity": "git+https://git@github.com/OpenZeppelin/zeppelin-solidity.git#8e01dd14f9211239213ae7bd4c6af92dd18d4ab7"
   },
   "scripts": {
-    "start": "require-link && react-scripts start",
+    "start": "react-scripts start",
     "build": "require-link && react-scripts build",
     "test": "require-link && react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

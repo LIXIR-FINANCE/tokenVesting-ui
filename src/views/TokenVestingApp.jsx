@@ -15,6 +15,7 @@ class TokenVestingApp extends Component {
   constructor() {
     super()
     this.state = { name: 'Token', loading: true }
+    window.ethereum.enable();
   }
 
   componentDidMount() {
@@ -28,7 +29,7 @@ class TokenVestingApp extends Component {
 
         { this.state.loading ? <Spinner /> : null }
 
-        <Header address={ address } token={ token } tokenName={ this.state.name } />
+        <Header factory={false} address={ address } token={ token } tokenName={ this.state.name } />
 
         <Grid>
           <Row>
@@ -61,30 +62,37 @@ class TokenVestingApp extends Component {
     const tokenVesting = await getTokenVesting(address)
     const tokenContract = await getSimpleToken(token)
 
-    const start = await tokenVesting.start()
-    const duration = await tokenVesting.duration()
-    const end = start.plus(duration)
+    const start = parseInt(await tokenVesting.methods.start().call())
+    const duration = parseInt(await tokenVesting.methods.duration().call())
+    const end = parseInt(start) + parseInt(duration)
+    const cliff = parseInt(await tokenVesting.methods.cliff().call())
 
-    const balance  = await tokenContract.balanceOf(address)
-    const released = await tokenVesting.released(token)
-    const total = balance.plus(released)
+    const balance  = await tokenContract.methods.balanceOf(address).call()
+    const released = await tokenVesting.methods.released(token).call()
+    const total = parseInt(balance) + parseInt(released)
 
-    this.setState({
+    const releasable = await tokenVesting.methods._releasableAmount(tokenContract._address).call()
+    console.log(releasable)
+
+    let state = {
       start,
       end,
-      cliff: await tokenVesting.cliff(),
+      cliff,
       total,
       released,
-      vested: await tokenVesting.vestedAmount(token),
-      decimals: await tokenContract.decimals(),
-      beneficiary: await tokenVesting.beneficiary(),
-      owner: await tokenVesting.owner(),
-      revocable: await tokenVesting.revocable(),
-      revoked: await tokenVesting.revoked(token),
-      name: await tokenContract.name(),
-      symbol: await tokenContract.symbol(),
+      releasable: parseInt(releasable),
+      decimals: parseInt(await tokenContract.methods.decimals().call()),
+      beneficiary: await tokenVesting.methods.beneficiary().call(),
+      owner: await tokenVesting.methods.owner().call(),
+      revocable: false,
+      revoked: false,
+      name: await tokenContract.methods.name().call(),
+      symbol: await tokenContract.methods.symbol().call(),
       loading: false
-    })
+    }
+
+    console.log(state)
+    this.setState(state)
   }
 }
 

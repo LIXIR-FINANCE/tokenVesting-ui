@@ -1,16 +1,29 @@
-import contract from 'truffle-contract'
 import Network from "./network"
 
 export async function getTokenVesting(address) {
-  const TokenVesting = contract(require('contracts/TokenVesting.json'))
+  let _eth = await Network.eth();
+  
+  const TokenVesting = new _eth.Contract(require('./contracts/TokenVesting.json'), address)
   const provider = await Network.provider()
   TokenVesting.setProvider(provider)
-  return TokenVesting.at(address)
+  console.log(TokenVesting)
+  return TokenVesting
 }
 
 export async function getSimpleToken(address) {
-  const SimpleToken = contract(require('contracts/SimpleToken.json'))
+  let _eth = await Network.eth();
+
+  const SimpleToken = new _eth.Contract(require('./contracts/LIX.json'), address)
   const provider = await Network.provider()
   SimpleToken.setProvider(provider)
-  return SimpleToken.at(address)
+  return SimpleToken
+}
+
+export async function getVestingFactory(address) {
+  let _eth = await Network.eth();
+
+  const VestingFactory = new _eth.Contract(require('./contracts/VestingFactory.json'), address)
+  const provider = await Network.provider()
+  VestingFactory.setProvider(provider)
+  return VestingFactory
 }

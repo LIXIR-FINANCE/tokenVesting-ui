@@ -1,14 +1,16 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import Web3 from 'web3'
 
 import TokenVestingApp from './views/TokenVestingApp'
+import PurchaseApp from './views/PurchaseApp'
+
 
 const App = () => (
   <Router>
     <Switch>
       <Route path="/:address/:token" component={ Main }/>
-      <Route component={ MissingAddress } />
+      <Route component={ PurchaseApp } />
     </Switch>
   </Router>
 )
@@ -20,11 +22,7 @@ const Main = function({ match }) {
   // TODO validate TokenVesting address
   return web3.utils.isAddress(address)
     ? <TokenVestingApp address={ address } token={ token } />
-    : <MissingAddress />
+    : <PurchaseApp />
 }
-
-const MissingAddress = () => (
-  <p>This is not a TokenVesting address :(</p>
-)
 
 export default App

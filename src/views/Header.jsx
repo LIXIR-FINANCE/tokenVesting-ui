@@ -1,8 +1,8 @@
 import React from 'react'
-import { Grid, Col } from 'react-bootstrap'
+import { Grid, Col, Button } from 'react-bootstrap'
 import { ContractLink, TokenLink } from './Links'
 
-function Header({ address, token, tokenName }) {
+function Header({ factory, address, token, tokenName }) {
   return ( 
     <header className="header">
       <Grid>
@@ -11,9 +11,17 @@ function Header({ address, token, tokenName }) {
             <img className="logo hidden-xs hidden-sm" src="/logo-zeppelin.png" alt="OpenZeppelin logo" />
           </a>
           <div className="contracts">
-            <h3>Vesting address: <ContractLink address={ address } /></h3>
+            <h3>{ factory ? "Vested Token Purchase Contract: 0x3a556ad4bef69b54df717e331d91833d60c71848" : "Vesting address:"} <ContractLink address={ address } /></h3>
             <span>For <TokenLink address={ token } name={ tokenName } /> token</span>
           </div>
+        </Col>
+        <Col>
+        {/* {
+          window.ethereum.isConnected() ?
+          <p>Connected</p> : 
+          <Button bsStyle="primary" onClick={alert()}>Connect Metamask</Button>
+        } */}
+        
         </Col>
       </Grid>
     </header>

@@ -19,6 +19,7 @@ class VestingDetails extends Component {
   async componentWillReceiveProps(nextProps) {
     const { owner, revoked } = nextProps.details
     const accounts = await Network.getAccounts()
+    console.log(accounts)
 
     const isOwner = accounts[0]
       ? owner === accounts[0].toLowerCase()
@@ -28,8 +29,7 @@ class VestingDetails extends Component {
   }
 
   render() {
-    const { start, cliff, end, total, released, vested, revocable, beneficiary } = this.props.details
-    const releasable = vested ? vested - released : null
+    const { start, cliff, end, total, released, releasable, revocable, beneficiary } = this.props.details
 
     return <div className="details">
       <h4>Vesting details</h4>
@@ -55,9 +55,9 @@ class VestingDetails extends Component {
             { this.formatTokens(total) }
           </TableRow>
           
-          <TableRow title="Already vested">
+          {/* <TableRow title="Already vested">
             { this.formatTokens(vested) }
-          </TableRow>
+          </TableRow> */}
           
           <TableRow title="Already released">
             { this.formatTokens(released) }
@@ -110,7 +110,8 @@ class VestingDetails extends Component {
 
     try {
       this.startLoader()
-      await tokenVesting.release(token, { from: accounts[0] })
+      console.log(accounts)
+      await tokenVesting.methods.release(token).send( { from: accounts[0] })
       this.props.getData()
     } catch (e) {
       this.stopLoader()
